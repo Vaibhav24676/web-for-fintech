@@ -514,31 +514,332 @@ const App = () => {
         {/* Compliance Center Tab */}
         {currentTab === 'compliance' && (
           <div className="space-y-6">
+            {/* Compliance Overview */}
             <div className="bg-white rounded-lg shadow-lg p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Compliance Center</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+                      <span className="text-green-600 font-semibold">✓</span>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-green-800">GDPR Compliant</h3>
+                      <p className="text-xs text-green-600">European Data Protection</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                      <span className="text-blue-600 font-semibold">✓</span>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-blue-800">RBI Guidelines</h3>
+                      <p className="text-xs text-blue-600">Banking Regulations</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <div className="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center">
+                      <span className="text-purple-600 font-semibold">✓</span>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-purple-800">DPDPA 2023</h3>
+                      <p className="text-xs text-purple-600">Indian Data Protection</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* GDPR Rights */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                🇪🇺 GDPR Rights & Controls
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-3">Data Export</h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Export all your data in JSON format for portability
-                  </p>
+                  <h4 className="font-semibold text-gray-900 mb-2">Right to Access</h4>
+                  <p className="text-sm text-gray-600 mb-3">Request a copy of your personal data</p>
                   <button
                     onClick={handleExportData}
-                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+                    className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 text-sm"
                   >
-                    Export Data
+                    Download Data Copy
                   </button>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-3">Data Deletion</h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Delete all your data permanently (Right to Erasure)
-                  </p>
+                  <h4 className="font-semibold text-gray-900 mb-2">Right to Rectification</h4>
+                  <p className="text-sm text-gray-600 mb-3">Correct inaccurate personal data</p>
+                  <button
+                    onClick={() => setCurrentTab('data-collection')}
+                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 text-sm"
+                  >
+                    Update Data
+                  </button>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-2">Right to Erasure</h4>
+                  <p className="text-sm text-gray-600 mb-3">Delete your personal data</p>
                   <button
                     onClick={handleDeleteData}
-                    className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700"
+                    className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 text-sm"
                   >
                     Delete All Data
+                  </button>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-2">Right to Portability</h4>
+                  <p className="text-sm text-gray-600 mb-3">Transfer data to another service</p>
+                  <button
+                    onClick={handleExportData}
+                    className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 text-sm"
+                  >
+                    Export for Transfer
+                  </button>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-2">Right to Object</h4>
+                  <p className="text-sm text-gray-600 mb-3">Object to data processing</p>
+                  <button
+                    onClick={() => setCurrentTab('consent-management')}
+                    className="w-full bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 text-sm"
+                  >
+                    Manage Consents
+                  </button>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-2">Right to Be Informed</h4>
+                  <p className="text-sm text-gray-600 mb-3">View privacy notice</p>
+                  <button
+                    onClick={() => alert('Privacy Notice: Your data is processed in accordance with GDPR. We collect personal data for banking services, consent management, and regulatory compliance. Data is encrypted and stored securely. You have full control over your data sharing preferences.')}
+                    className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 text-sm"
+                  >
+                    View Privacy Notice
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* RBI Compliance */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                🏛️ RBI Banking Compliance
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-3">KYC Compliance Status</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center p-2 bg-green-50 rounded">
+                      <span className="text-sm">Customer Due Diligence (CDD)</span>
+                      <span className="text-green-600 text-sm font-medium">✓ Complete</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-green-50 rounded">
+                      <span className="text-sm">Aadhaar Verification</span>
+                      <span className="text-green-600 text-sm font-medium">✓ Verified</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-green-50 rounded">
+                      <span className="text-sm">PAN Verification</span>
+                      <span className="text-green-600 text-sm font-medium">✓ Verified</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-yellow-50 rounded">
+                      <span className="text-sm">Risk Assessment</span>
+                      <span className="text-yellow-600 text-sm font-medium">⚠ Low Risk</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-3">Data Localization</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center p-2 bg-blue-50 rounded">
+                      <span className="text-sm">Data Storage Location</span>
+                      <span className="text-blue-600 text-sm font-medium">🇮🇳 India</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-blue-50 rounded">
+                      <span className="text-sm">Cross-border Transfer</span>
+                      <span className="text-blue-600 text-sm font-medium">✓ Compliant</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-blue-50 rounded">
+                      <span className="text-sm">Encryption Standard</span>
+                      <span className="text-blue-600 text-sm font-medium">AES-256</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                <h5 className="font-medium text-gray-900 mb-2">Transaction Monitoring</h5>
+                <p className="text-sm text-gray-600">
+                  Your transactions are monitored for suspicious activities as per RBI AML guidelines. 
+                  Any unusual patterns are flagged for review to ensure financial system integrity.
+                </p>
+              </div>
+            </div>
+
+            {/* DPDPA 2023 Compliance */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                🇮🇳 DPDPA 2023 - Digital Personal Data Protection
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-3">Data Principal Rights</h4>
+                  <div className="space-y-3">
+                    <div className="border-l-4 border-green-500 pl-4">
+                      <h5 className="font-medium text-gray-900">Right to Information</h5>
+                      <p className="text-sm text-gray-600">You have been informed about data processing purposes</p>
+                    </div>
+                    <div className="border-l-4 border-blue-500 pl-4">
+                      <h5 className="font-medium text-gray-900">Right to Correction</h5>
+                      <p className="text-sm text-gray-600">You can correct inaccurate personal data</p>
+                    </div>
+                    <div className="border-l-4 border-purple-500 pl-4">
+                      <h5 className="font-medium text-gray-900">Right to Erasure</h5>
+                      <p className="text-sm text-gray-600">You can request deletion of personal data</p>
+                    </div>
+                    <div className="border-l-4 border-orange-500 pl-4">
+                      <h5 className="font-medium text-gray-900">Right to Grievance Redressal</h5>
+                      <p className="text-sm text-gray-600">You can file complaints about data processing</p>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-3">Consent Management</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center p-2 bg-green-50 rounded">
+                      <span className="text-sm">Consent Validity</span>
+                      <span className="text-green-600 text-sm font-medium">✓ Valid</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-green-50 rounded">
+                      <span className="text-sm">Consent Specificity</span>
+                      <span className="text-green-600 text-sm font-medium">✓ Granular</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-green-50 rounded">
+                      <span className="text-sm">Consent Withdrawal</span>
+                      <span className="text-green-600 text-sm font-medium">✓ Available</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-blue-50 rounded">
+                      <span className="text-sm">Data Processing Lawfulness</span>
+                      <span className="text-blue-600 text-sm font-medium">✓ Compliant</span>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <button
+                      onClick={() => setCurrentTab('consent-management')}
+                      className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 text-sm"
+                    >
+                      Review Consent Settings
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Data Processing Transparency */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">📊 Data Processing Transparency</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Processing Purposes</h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• Account opening and KYC verification</li>
+                    <li>• Risk assessment and fraud prevention</li>
+                    <li>• Regulatory compliance reporting</li>
+                    <li>• Customer service and support</li>
+                    <li>• Product recommendations</li>
+                  </ul>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Data Categories</h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• Identity data (Name, Aadhaar, PAN)</li>
+                    <li>• Contact data (Phone, Email, Address)</li>
+                    <li>• Financial data (Transaction history)</li>
+                    <li>• Behavioral data (App usage patterns)</li>
+                    <li>• Consent preferences</li>
+                  </ul>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Retention Periods</h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• KYC documents: 8 years post closure</li>
+                    <li>• Transaction records: 10 years</li>
+                    <li>• Consent logs: Duration of relationship</li>
+                    <li>• Audit trails: 7 years</li>
+                    <li>• Marketing preferences: Until withdrawn</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Regulatory Reporting */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">📋 Regulatory Reporting Status</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-3">RBI Reporting</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center p-2 bg-green-50 rounded">
+                      <span className="text-sm">CRILC Reporting</span>
+                      <span className="text-green-600 text-sm font-medium">✓ Submitted</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-green-50 rounded">
+                      <span className="text-sm">AML/CFT Compliance</span>
+                      <span className="text-green-600 text-sm font-medium">✓ Compliant</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-blue-50 rounded">
+                      <span className="text-sm">Suspicious Transaction Monitoring</span>
+                      <span className="text-blue-600 text-sm font-medium">🔍 Active</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-3">Data Protection Authority</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center p-2 bg-purple-50 rounded">
+                      <span className="text-sm">DPDPA Compliance</span>
+                      <span className="text-purple-600 text-sm font-medium">✓ Registered</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-purple-50 rounded">
+                      <span className="text-sm">Data Breach Protocols</span>
+                      <span className="text-purple-600 text-sm font-medium">✓ Established</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-yellow-50 rounded">
+                      <span className="text-sm">Privacy Impact Assessments</span>
+                      <span className="text-yellow-600 text-sm font-medium">📋 Regular</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Grievance Redressal */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">🛡️ Grievance Redressal & Support</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Data Protection Officer</h4>
+                  <div className="space-y-2 text-sm text-gray-600">
+                    <p><strong>Email:</strong> dpo@bank.com</p>
+                    <p><strong>Phone:</strong> 1800-XXX-XXXX</p>
+                    <p><strong>Address:</strong> Data Protection Office, Bank Headquarters</p>
+                    <p><strong>Response Time:</strong> 30 days (as per DPDPA)</p>
+                  </div>
+                  <button className="mt-3 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 text-sm">
+                    File Complaint
+                  </button>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Regulatory Escalation</h4>
+                  <div className="space-y-2 text-sm text-gray-600">
+                    <p><strong>RBI Ombudsman:</strong> rbiombudsman@rbi.org.in</p>
+                    <p><strong>Data Protection Board:</strong> grievances@dpb.gov.in</p>
+                    <p><strong>Consumer Forum:</strong> consumeraffairs.gov.in</p>
+                    <p><strong>Cyber Crime Cell:</strong> cybercrime.gov.in</p>
+                  </div>
+                  <button className="mt-3 w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 text-sm">
+                    Escalate to Regulator
                   </button>
                 </div>
               </div>
@@ -547,7 +848,7 @@ const App = () => {
             {/* Data Inventory */}
             {customerData && (
               <div className="bg-white rounded-lg shadow-lg p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Data Inventory</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-6">🗄️ Your Data Inventory</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-3">Personal Information</h3>
@@ -566,6 +867,14 @@ const App = () => {
                       <p className="text-sm"><strong>PIN:</strong> {customerData.pin_code}</p>
                     </div>
                   </div>
+                </div>
+                <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                  <h4 className="font-medium text-blue-900 mb-2">Data Security Notice</h4>
+                  <p className="text-sm text-blue-800">
+                    Your sensitive data is encrypted using AES-256 encryption with customer-specific keys. 
+                    All data transfers are logged in an immutable blockchain for audit purposes. 
+                    Your data is processed only with your explicit consent and for specified purposes.
+                  </p>
                 </div>
               </div>
             )}
