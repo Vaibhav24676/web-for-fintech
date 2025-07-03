@@ -394,6 +394,11 @@ async def verify_blockchain():
     try:
         blocks = await db.blockchain.find().sort("index", 1).to_list(1000)
         
+        # Remove MongoDB ObjectIds
+        for block in blocks:
+            if "_id" in block:
+                del block["_id"]
+        
         if not blocks:
             return {"valid": True, "message": "No blocks found"}
         
