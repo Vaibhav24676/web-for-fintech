@@ -12,52 +12,283 @@
     "name": "Get Partners",
     "status": "PASSED",
     "response_code": 200,
-    "response": []
+    "response": [
+      {
+        "id": "partner_1",
+        "name": "HDFC Bank",
+        "type": "bank",
+        "description": "Housing loans and credit cards",
+        "is_active": true
+      },
+      {
+        "id": "partner_2",
+        "name": "ICICI Bank",
+        "type": "bank",
+        "description": "Personal loans and investments",
+        "is_active": true
+      },
+      {
+        "id": "partner_3",
+        "name": "Bajaj Finance",
+        "type": "nbfc",
+        "description": "Consumer finance and loans",
+        "is_active": true
+      },
+      {
+        "id": "partner_4",
+        "name": "SBI Cards",
+        "type": "fintech",
+        "description": "Credit card services",
+        "is_active": true
+      },
+      {
+        "id": "partner_5",
+        "name": "Paytm",
+        "type": "fintech",
+        "description": "Digital payments and lending",
+        "is_active": true
+      }
+    ]
   },
   {
     "name": "Submit Customer Data",
     "status": "PASSED",
     "response_code": 200,
     "response": {
-      "id": "413a5f17-9531-4c27-b10a-bce9437c505f",
-      "full_name": "Test User 20250703063634",
-      "aadhaar_number": "Z0FBQUFBQm9aaVR5bGFzTnE5ZFJ1MUpXVHVFRnBKNThvcGlkem1hUnR0NC1yWXc5RzluUHhwa1FDT2hBMnVZeGpDYm5WeEhsVHNheEhxXzNxZDJFdGVjazMtMklDUnNsZnc9PQ==",
-      "pan_number": "Z0FBQUFBQm9aaVR5Q1VxZXYxc3FHSDRIRl9kVnZHVWl2RG9UVmJkMzJXRk9HcG9fWWlHMlp6V3EzSWxzMUEtU0dGYWpOTzVyUjlSMGRUd2hXbXl3cm1ta2R3LWd5MFNielE9PQ==",
-      "mobile_number": "Z0FBQUFBQm9aaVR5N3ZDUDRvSXVWUDBIWDctZkFjelhmRGdOQ0V3YXhKcVkyZHRFNTdrYmhTMThwbGR5ZG9pM3FObGV2MUt1d3ZqMXJZVGJvdHNDYUZfeC1DN1JfbW0yZkE9PQ==",
-      "email": "test20250703063634@example.com",
-      "address": "Z0FBQUFBQm9aaVR5THdlYnVBRkhIczctdkt4czdrcGx1WVVFcE5QSXhlS2NhVXFmcFVlcXB4QnBYODRCV0IyNmtNTmZJb2NXcGdIM194ZGJsVmhoUjdCWDRYS3RqVnVrS0RiSEFfd1F3VGFkbEFiVlY1WUJ5cWs9",
+      "id": "694a041d-18e6-4bea-adb4-34751be03b54",
+      "full_name": "Test User 20250703064408",
+      "aadhaar_number": "Z0FBQUFBQm9aaWE0aWt5Smg4YUNwa0ptMGZna1dMenpBeWxVVHFBYm55Ml83LTlFR1FTb29maHdSVGZGQVJBS3U4a0hVa3dSa0dkSHE2VHdUeWRtZGx6ekxQYnZWWkpTbUE9PQ==",
+      "pan_number": "Z0FBQUFBQm9aaWE0TkhwNlpDelgzYVpUeEx5aThVenlhVEVCQURoV0VEWU5BdjU5VjZXemgzaUNiamNCc3h5ZjRPYXBFOW9SOEd0RkFseEpGeWJEajdVai1HLW5HbDNERkE9PQ==",
+      "mobile_number": "Z0FBQUFBQm9aaWE0bDBsWDhxaHVIWl9ydWZ5dkFvQm82S2JleFZIZjV4SlB3eWlyaUtsZkhKVHNZamN6S3RiT3lzY01Pa2piUEZ2czJPN1JmdlpTSFVRODhlc2VqelJWMkE9PQ==",
+      "email": "test20250703064408@example.com",
+      "address": "Z0FBQUFBQm9aaWE0ZGpNaVduUnM1S2tTY3k1cTVFMXJmeWNpajJqNGd1NzdVU3J2elV6WkFMZkFPaklybm5UVndveTdybXdiQWZqNWFsdEV0R3E0cU9GSUxhMU51aXJsWE1xZS1aRWxLd3luRnZLYXpPOVRmS3c9",
       "district": "Test District",
       "state": "Test State",
       "pin_code": "110001",
-      "created_at": "2025-07-03T06:36:34.380466",
-      "updated_at": "2025-07-03T06:36:34.380470"
+      "created_at": "2025-07-03T06:44:08.354364",
+      "updated_at": "2025-07-03T06:44:08.354367"
     }
   },
   {
     "name": "Get User Data",
-    "status": "FAILED",
-    "response_code": 500,
-    "expected": 200,
-    "response": "Internal Server Error"
+    "status": "PASSED",
+    "response_code": 200,
+    "response": {
+      "id": "694a041d-18e6-4bea-adb4-34751be03b54",
+      "full_name": "Test User 20250703064408",
+      "aadhaar_number": "1234-5678-9012",
+      "pan_number": "ABCDE1234F",
+      "mobile_number": "9876543210",
+      "email": "test20250703064408@example.com",
+      "address": "123 Test Street, Test Area",
+      "district": "Test District",
+      "state": "Test State",
+      "pin_code": "110001",
+      "created_at": "2025-07-03T06:44:08.354000",
+      "updated_at": "2025-07-03T06:44:08.354000"
+    }
   },
   {
     "name": "Get Partners",
     "status": "PASSED",
     "response_code": 200,
-    "response": []
+    "response": [
+      {
+        "id": "partner_1",
+        "name": "HDFC Bank",
+        "type": "bank",
+        "description": "Housing loans and credit cards",
+        "is_active": true
+      },
+      {
+        "id": "partner_2",
+        "name": "ICICI Bank",
+        "type": "bank",
+        "description": "Personal loans and investments",
+        "is_active": true
+      },
+      {
+        "id": "partner_3",
+        "name": "Bajaj Finance",
+        "type": "nbfc",
+        "description": "Consumer finance and loans",
+        "is_active": true
+      },
+      {
+        "id": "partner_4",
+        "name": "SBI Cards",
+        "type": "fintech",
+        "description": "Credit card services",
+        "is_active": true
+      },
+      {
+        "id": "partner_5",
+        "name": "Paytm",
+        "type": "fintech",
+        "description": "Digital payments and lending",
+        "is_active": true
+      }
+    ]
+  },
+  {
+    "name": "Create Consent",
+    "status": "PASSED",
+    "response_code": 200,
+    "response": {
+      "id": "188c9985-91fc-4f2c-9582-bb4b311681a5",
+      "customer_id": "694a041d-18e6-4bea-adb4-34751be03b54",
+      "partner_id": "partner_1",
+      "partner_name": "HDFC Bank",
+      "data_types": [
+        "full_name",
+        "email",
+        "mobile_number"
+      ],
+      "purpose": "Test consent",
+      "duration_days": 30,
+      "granted_at": "2025-07-03T06:44:08.472476",
+      "expires_at": "2025-08-02T06:44:08.472374",
+      "is_active": true,
+      "revoked_at": null
+    }
   },
   {
     "name": "Get Consents",
     "status": "PASSED",
     "response_code": 200,
-    "response": []
+    "response": [
+      {
+        "id": "188c9985-91fc-4f2c-9582-bb4b311681a5",
+        "customer_id": "694a041d-18e6-4bea-adb4-34751be03b54",
+        "partner_id": "partner_1",
+        "partner_name": "HDFC Bank",
+        "data_types": [
+          "full_name",
+          "email",
+          "mobile_number"
+        ],
+        "purpose": "Test consent",
+        "duration_days": 30,
+        "granted_at": "2025-07-03T06:44:08.472000",
+        "expires_at": "2025-08-02T06:44:08.472000",
+        "is_active": true,
+        "revoked_at": null
+      }
+    ]
+  },
+  {
+    "name": "Get Partners",
+    "status": "PASSED",
+    "response_code": 200,
+    "response": [
+      {
+        "id": "partner_1",
+        "name": "HDFC Bank",
+        "type": "bank",
+        "description": "Housing loans and credit cards",
+        "is_active": true
+      },
+      {
+        "id": "partner_2",
+        "name": "ICICI Bank",
+        "type": "bank",
+        "description": "Personal loans and investments",
+        "is_active": true
+      },
+      {
+        "id": "partner_3",
+        "name": "Bajaj Finance",
+        "type": "nbfc",
+        "description": "Consumer finance and loans",
+        "is_active": true
+      },
+      {
+        "id": "partner_4",
+        "name": "SBI Cards",
+        "type": "fintech",
+        "description": "Credit card services",
+        "is_active": true
+      },
+      {
+        "id": "partner_5",
+        "name": "Paytm",
+        "type": "fintech",
+        "description": "Digital payments and lending",
+        "is_active": true
+      }
+    ]
+  },
+  {
+    "name": "Data Transfer",
+    "status": "PASSED",
+    "response_code": 200,
+    "response": {
+      "message": "Data transferred successfully",
+      "transfer_data": {
+        "full_name": "Test User 20250703064408",
+        "email": "test20250703064408@example.com",
+        "mobile_number": "9876543210"
+      },
+      "partner_id": "partner_1"
+    }
   },
   {
     "name": "Get Audit Log",
-    "status": "FAILED",
-    "response_code": 500,
-    "expected": 200,
-    "response": "Internal Server Error"
+    "status": "PASSED",
+    "response_code": 200,
+    "response": [
+      {
+        "id": "5130fa80-f5a3-44cc-841c-99f87689ea6a",
+        "customer_id": "694a041d-18e6-4bea-adb4-34751be03b54",
+        "action": "data_transferred",
+        "details": {
+          "partner_id": "partner_1",
+          "consent_id": "188c9985-91fc-4f2c-9582-bb4b311681a5",
+          "data_types": [
+            "full_name",
+            "email",
+            "mobile_number"
+          ]
+        },
+        "timestamp": "2025-07-03T06:44:08.661000",
+        "ip_address": null
+      },
+      {
+        "id": "490311ff-cd62-48b8-8ac8-6e0615b206e6",
+        "customer_id": "694a041d-18e6-4bea-adb4-34751be03b54",
+        "action": "consent_granted",
+        "details": {
+          "consent_id": "188c9985-91fc-4f2c-9582-bb4b311681a5",
+          "partner_name": "HDFC Bank",
+          "data_types": [
+            "full_name",
+            "email",
+            "mobile_number"
+          ],
+          "purpose": "Test consent",
+          "duration_days": 30
+        },
+        "timestamp": "2025-07-03T06:44:08.486000",
+        "ip_address": null
+      },
+      {
+        "id": "8b81234b-95e5-4cc1-b90f-aa507a4d2d87",
+        "customer_id": "694a041d-18e6-4bea-adb4-34751be03b54",
+        "action": "customer_data_submitted",
+        "details": {
+          "fields": [
+            "full_name",
+            "aadhaar_number",
+            "pan_number",
+            "mobile_number",
+            "email",
+            "address"
+          ]
+        },
+        "timestamp": "2025-07-03T06:44:08.400000",
+        "ip_address": null
+      }
+    ]
   },
   {
     "name": "Verify Blockchain",
@@ -70,10 +301,105 @@
   },
   {
     "name": "Export Data",
-    "status": "FAILED",
-    "response_code": 500,
-    "expected": 200,
-    "response": "Internal Server Error"
+    "status": "PASSED",
+    "response_code": 200,
+    "response": {
+      "customer_data": {
+        "id": "694a041d-18e6-4bea-adb4-34751be03b54",
+        "full_name": "Test User 20250703064408",
+        "aadhaar_number": "1234-5678-9012",
+        "pan_number": "ABCDE1234F",
+        "mobile_number": "9876543210",
+        "email": "test20250703064408@example.com",
+        "address": "123 Test Street, Test Area",
+        "district": "Test District",
+        "state": "Test State",
+        "pin_code": "110001",
+        "created_at": "2025-07-03T06:44:08.354000",
+        "updated_at": "2025-07-03T06:44:08.354000"
+      },
+      "consents": [
+        {
+          "id": "188c9985-91fc-4f2c-9582-bb4b311681a5",
+          "customer_id": "694a041d-18e6-4bea-adb4-34751be03b54",
+          "partner_id": "partner_1",
+          "partner_name": "HDFC Bank",
+          "data_types": [
+            "full_name",
+            "email",
+            "mobile_number"
+          ],
+          "purpose": "Test consent",
+          "duration_days": 30,
+          "granted_at": "2025-07-03T06:44:08.472000",
+          "expires_at": "2025-08-02T06:44:08.472000",
+          "is_active": true,
+          "revoked_at": null
+        }
+      ],
+      "audit_logs": [
+        {
+          "id": "8b81234b-95e5-4cc1-b90f-aa507a4d2d87",
+          "customer_id": "694a041d-18e6-4bea-adb4-34751be03b54",
+          "action": "customer_data_submitted",
+          "details": {
+            "fields": [
+              "full_name",
+              "aadhaar_number",
+              "pan_number",
+              "mobile_number",
+              "email",
+              "address"
+            ]
+          },
+          "timestamp": "2025-07-03T06:44:08.400000",
+          "ip_address": null
+        },
+        {
+          "id": "490311ff-cd62-48b8-8ac8-6e0615b206e6",
+          "customer_id": "694a041d-18e6-4bea-adb4-34751be03b54",
+          "action": "consent_granted",
+          "details": {
+            "consent_id": "188c9985-91fc-4f2c-9582-bb4b311681a5",
+            "partner_name": "HDFC Bank",
+            "data_types": [
+              "full_name",
+              "email",
+              "mobile_number"
+            ],
+            "purpose": "Test consent",
+            "duration_days": 30
+          },
+          "timestamp": "2025-07-03T06:44:08.486000",
+          "ip_address": null
+        },
+        {
+          "id": "5130fa80-f5a3-44cc-841c-99f87689ea6a",
+          "customer_id": "694a041d-18e6-4bea-adb4-34751be03b54",
+          "action": "data_transferred",
+          "details": {
+            "partner_id": "partner_1",
+            "consent_id": "188c9985-91fc-4f2c-9582-bb4b311681a5",
+            "data_types": [
+              "full_name",
+              "email",
+              "mobile_number"
+            ]
+          },
+          "timestamp": "2025-07-03T06:44:08.661000",
+          "ip_address": null
+        }
+      ],
+      "export_timestamp": "2025-07-03T06:44:08.768973"
+    }
+  },
+  {
+    "name": "Revoke Consent",
+    "status": "PASSED",
+    "response_code": 200,
+    "response": {
+      "message": "Consent revoked successfully"
+    }
   },
   {
     "name": "Delete Data",
