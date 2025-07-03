@@ -167,6 +167,7 @@ Version: ${privacyData.version}
       fetchConsents(currentCustomerId);
       fetchAuditLogs(currentCustomerId);
       fetchCustomerData(currentCustomerId);
+      fetchComplianceData(currentCustomerId);
     }
   }, [currentCustomerId]);
 
