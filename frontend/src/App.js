@@ -73,12 +73,79 @@ const App = () => {
     }
   };
 
-  const fetchCustomerData = async (customerId) => {
+  const fetchComplianceData = async (customerId) => {
     try {
-      const response = await axios.get(`${API}/user-data/${customerId}`);
-      setCustomerData(response.data);
+      const [gdprResponse, rbiResponse, dpdpaResponse] = await Promise.all([
+        axios.get(`${API}/compliance/gdpr-status/${customerId}`),
+        axios.get(`${API}/compliance/rbi-status/${customerId}`),
+        axios.get(`${API}/compliance/dpdpa-status/${customerId}`)
+      ]);
+      
+      setComplianceData({
+        gdpr: gdprResponse.data,
+        rbi: rbiResponse.data,
+        dpdpa: dpdpaResponse.data
+      });
     } catch (error) {
-      console.error('Error fetching customer data:', error);
+      console.error('Error fetching compliance data:', error);
+    }
+  };
+
+  const handleFileComplaint = async () => {
+    if (!currentCustomerId) {
+      showNotification('Please submit customer data first', 'error');
+      return;
+    }
+    
+    const complaint = {
+      customer_id: currentCustomerId,
+      type: 'data_protection',
+      category: 'general',
+      description: 'General data protection inquiry',
+      severity: 'medium',
+      contact_method: 'email'
+    };
+    
+    try {
+      const response = await axios.post(`${API}/compliance/file-complaint`, complaint);
+      showNotification(`Complaint filed successfully! Reference: ${response.data.reference_number}`);
+    } catch (error) {
+      showNotification('Error filing complaint', 'error');
+      console.error('Error:', error);
+    }
+  };
+
+  const handleViewPrivacyNotice = async () => {
+    try {
+      const response = await axios.post(`${API}/compliance/privacy-notice`);
+      const privacyData = response.data;
+      
+      // Create a detailed privacy notice popup
+      const notice = `
+PRIVACY NOTICE - ${privacyData.data_controller.name}
+
+DATA PROCESSING PURPOSES:
+${privacyData.data_processing.purposes.map(p => `• ${p}`).join('\n')}
+
+YOUR RIGHTS:
+${privacyData.customer_rights.dpdpa.map(r => `• ${r}`).join('\n')}
+
+DATA SECURITY:
+• ${privacyData.security_measures.encryption}
+• ${privacyData.security_measures.access_controls}
+• ${privacyData.security_measures.monitoring}
+
+CONTACT:
+Data Protection Officer: ${privacyData.data_controller.dpo_contact}
+
+Last Updated: ${new Date(privacyData.last_updated).toLocaleDateString()}
+Version: ${privacyData.version}
+      `;
+      
+      alert(notice);
+    } catch (error) {
+      showNotification('Error loading privacy notice', 'error');
+      console.error('Error:', error);
     }
   };
 
