@@ -696,7 +696,7 @@ Version: ${privacyData.version}
                   <h4 className="font-semibold text-gray-900 mb-2">Right to Be Informed</h4>
                   <p className="text-sm text-gray-600 mb-3">View privacy notice</p>
                   <button
-                    onClick={() => alert('Privacy Notice: Your data is processed in accordance with GDPR. We collect personal data for banking services, consent management, and regulatory compliance. Data is encrypted and stored securely. You have full control over your data sharing preferences.')}
+                    onClick={handleViewPrivacyNotice}
                     className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 text-sm"
                   >
                     View Privacy Notice
