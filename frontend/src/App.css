@@ -1,38 +1,250 @@
+/* Import Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for the Customer Data Portal */
 .App {
-    text-align: center;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Animation for notifications */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.notification {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* Form focus styles */
+.form-input:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* Card hover effects */
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+/* Status indicators */
+.status-active {
+  @apply bg-green-100 text-green-800;
+}
+
+.status-inactive {
+  @apply bg-red-100 text-red-800;
+}
+
+.status-pending {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+/* Custom button styles */
+.btn-primary {
+  @apply bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md transition-colors duration-200;
+}
+
+.btn-danger {
+  @apply bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200;
+}
+
+.btn-success {
+  @apply bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200;
+}
+
+/* Loading spinner */
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive design helpers */
+@media (max-width: 768px) {
+  .mobile-full {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .mobile-stack {
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+  }
+  
+  .mobile-center {
+    text-align: center;
+  }
 }
 
-.App-link {
-    color: #61dafb;
+/* Data table styles */
+.data-table {
+  @apply min-w-full divide-y divide-gray-200;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.data-table th {
+  @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+
+.data-table td {
+  @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900;
+}
+
+/* Dashboard grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Progress bars */
+.progress-bar {
+  @apply w-full bg-gray-200 rounded-full h-2.5;
+}
+
+.progress-fill {
+  @apply h-2.5 bg-blue-600 rounded-full transition-all duration-300;
+}
+
+/* Toast notification styling */
+.toast {
+  @apply fixed top-4 right-4 z-50 px-4 py-3 rounded-lg shadow-lg text-white font-medium;
+}
+
+.toast.success {
+  @apply bg-green-500;
+}
+
+.toast.error {
+  @apply bg-red-500;
+}
+
+.toast.warning {
+  @apply bg-yellow-500;
+}
+
+.toast.info {
+  @apply bg-blue-500;
+}
+
+/* Masked input styling */
+.masked-input {
+  @apply font-mono;
+  letter-spacing: 0.1em;
+}
+
+/* Security indicators */
+.security-high {
+  @apply text-green-600;
+}
+
+.security-medium {
+  @apply text-yellow-600;
+}
+
+.security-low {
+  @apply text-red-600;
+}
+
+/* Consent status badges */
+.consent-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.consent-active {
+  @apply bg-green-100 text-green-800;
+}
+
+.consent-expired {
+  @apply bg-red-100 text-red-800;
+}
+
+.consent-revoked {
+  @apply bg-gray-100 text-gray-800;
+}
+
+/* Blockchain verification indicator */
+.blockchain-verified {
+  @apply text-green-600;
+}
+
+.blockchain-unverified {
+  @apply text-red-600;
+}
+
+/* Audit log styling */
+.audit-log-item {
+  @apply border-l-4 border-blue-500 bg-blue-50 p-4 my-2;
+}
+
+.audit-log-item.warning {
+  @apply border-yellow-500 bg-yellow-50;
+}
+
+.audit-log-item.error {
+  @apply border-red-500 bg-red-50;
+}
+
+/* Data visualization */
+.chart-container {
+  @apply bg-white p-6 rounded-lg shadow-lg;
+}
+
+/* Responsive text */
+.responsive-text {
+  @apply text-sm md:text-base lg:text-lg;
+}
+
+/* Icon alignment */
+.icon-text {
+  @apply flex items-center;
+}
+
+.icon-text .icon {
+  @apply mr-2;
 }
