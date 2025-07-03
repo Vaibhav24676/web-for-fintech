@@ -183,6 +183,10 @@ async def get_user_data(customer_id: str):
         if not customer_data:
             raise HTTPException(status_code=404, detail="Customer not found")
         
+        # Remove MongoDB ObjectId
+        if "_id" in customer_data:
+            del customer_data["_id"]
+        
         # Decrypt sensitive fields
         customer_data["aadhaar_number"] = decrypt_data(customer_data["aadhaar_number"], customer_id)
         customer_data["pan_number"] = decrypt_data(customer_data["pan_number"], customer_id)
