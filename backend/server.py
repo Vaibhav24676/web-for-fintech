@@ -416,6 +416,12 @@ async def get_audit_log(customer_id: str):
     """Get audit logs for a customer"""
     try:
         audit_logs = await db.audit_logs.find({"customer_id": customer_id}).sort("timestamp", -1).to_list(1000)
+        
+        # Remove MongoDB ObjectIds
+        for log in audit_logs:
+            if "_id" in log:
+                del log["_id"]
+        
         return audit_logs
         
     except Exception as e:
