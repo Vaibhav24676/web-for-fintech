@@ -73,6 +73,15 @@ const App = () => {
     }
   };
 
+  const fetchCustomerData = async (customerId) => {
+    try {
+      const response = await axios.get(`${API}/user-data/${customerId}`);
+      setCustomerData(response.data);
+    } catch (error) {
+      console.error('Error fetching customer data:', error);
+    }
+  };
+
   const fetchComplianceData = async (customerId) => {
     try {
       const [gdprResponse, rbiResponse, dpdpaResponse] = await Promise.all([
