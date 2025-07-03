@@ -439,20 +439,28 @@ async def get_partners():
     try:
         # Initialize sample partners if not exists
         partner_count = await db.partners.count_documents({})
+        print(f"DEBUG: Found {partner_count} existing partners")
+        
         if partner_count == 0:
+            print("DEBUG: Initializing sample partners...")
             for partner in SAMPLE_PARTNERS:
+                print(f"DEBUG: Inserting partner: {partner}")
                 await db.partners.insert_one(partner)
+            print("DEBUG: Sample partners initialized")
         
         partners = await db.partners.find({"is_active": True}).to_list(1000)
+        print(f"DEBUG: Retrieved {len(partners)} active partners")
         
         # Remove MongoDB ObjectIds
         for partner in partners:
             if "_id" in partner:
                 del partner["_id"]
         
+        print(f"DEBUG: Returning {len(partners)} partners")
         return partners
         
     except Exception as e:
+        print(f"DEBUG: Error in get_partners: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # Anomaly Detection
