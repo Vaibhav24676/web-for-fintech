@@ -276,6 +276,12 @@ async def get_consents(customer_id: str):
     """Get all consents for a customer"""
     try:
         consents = await db.consents.find({"customer_id": customer_id}).to_list(1000)
+        
+        # Remove MongoDB ObjectIds
+        for consent in consents:
+            if "_id" in consent:
+                del consent["_id"]
+        
         return consents
         
     except Exception as e:
