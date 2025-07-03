@@ -908,7 +908,8 @@ Version: ${privacyData.version}
                     <p><strong>Address:</strong> Data Protection Office, Bank Headquarters</p>
                     <p><strong>Response Time:</strong> 30 days (as per DPDPA)</p>
                   </div>
-                  <button className="mt-3 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 text-sm">
+                  <button className="mt-3 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 text-sm"
+                    onClick={handleFileComplaint}>
                     File Complaint
                   </button>
                 </div>
