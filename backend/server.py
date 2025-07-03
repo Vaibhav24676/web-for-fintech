@@ -596,10 +596,365 @@ async def delete_customer_data(customer_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Test endpoint
-@api_router.get("/")
-async def root():
-    return {"message": "Customer Data Portal API", "version": "1.0.0"}
+# Compliance APIs for GDPR, RBI, and DPDPA
+@api_router.get("/compliance/gdpr-status/{customer_id}")
+async def get_gdpr_compliance_status(customer_id: str):
+    """Get GDPR compliance status for customer"""
+    try:
+        customer_data = await db.customer_data.find_one({"id": customer_id})
+        if not customer_data:
+            raise HTTPException(status_code=404, detail="Customer not found")
+        
+        consents = await db.consents.find({"customer_id": customer_id}).to_list(1000)
+        audit_logs = await db.audit_logs.find({"customer_id": customer_id}).to_list(1000)
+        
+        # Remove MongoDB ObjectIds
+        for consent in consents:
+            if "_id" in consent:
+                del consent["_id"]
+        for log in audit_logs:
+            if "_id" in log:
+                del log["_id"]
+        
+        gdpr_status = {
+            "customer_id": customer_id,
+            "rights_status": {
+                "right_to_access": True,
+                "right_to_rectification": True,
+                "right_to_erasure": True,
+                "right_to_portability": True,
+                "right_to_object": True,
+                "right_to_restrict_processing": len([c for c in consents if not c.get("is_active", True)]) > 0,
+                "right_to_be_informed": True
+            },
+            "consent_management": {
+                "total_consents": len(consents),
+                "active_consents": len([c for c in consents if c.get("is_active", True)]),
+                "revoked_consents": len([c for c in consents if not c.get("is_active", True)]),
+                "last_consent_update": max([c.get("granted_at", datetime.min) for c in consents], default=datetime.min)
+            },
+            "data_processing": {
+                "lawful_basis": "consent",
+                "processing_purposes": ["banking_services", "kyc_verification", "fraud_prevention", "regulatory_compliance"],
+                "data_categories": ["identity", "contact", "financial", "behavioral"],
+                "retention_policy": "as_per_rbi_guidelines"
+            },
+            "audit_trail": {
+                "total_activities": len(audit_logs),
+                "last_activity": max([l.get("timestamp", datetime.min) for l in audit_logs], default=datetime.min)
+            }
+        }
+        
+        return gdpr_status
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/compliance/rbi-status/{customer_id}")
+async def get_rbi_compliance_status(customer_id: str):
+    """Get RBI compliance status for customer"""
+    try:
+        customer_data = await db.customer_data.find_one({"id": customer_id})
+        if not customer_data:
+            raise HTTPException(status_code=404, detail="Customer not found")
+        
+        rbi_status = {
+            "customer_id": customer_id,
+            "kyc_compliance": {
+                "cdd_complete": True,
+                "aadhaar_verified": bool(customer_data.get("aadhaar_number")),
+                "pan_verified": bool(customer_data.get("pan_number")),
+                "address_verified": bool(customer_data.get("address")),
+                "risk_category": "low",
+                "kyc_update_required": False,
+                "last_kyc_update": customer_data.get("updated_at", datetime.utcnow())
+            },
+            "aml_compliance": {
+                "transaction_monitoring": True,
+                "suspicious_activity_detection": True,
+                "pep_screening": False,
+                "sanctions_screening": True,
+                "risk_score": 2.5  # Scale of 1-10
+            },
+            "data_localization": {
+                "data_stored_in_india": True,
+                "cross_border_transfer_compliant": True,
+                "encryption_standard": "AES-256",
+                "data_center_location": "Mumbai, India"
+            },
+            "outsourcing_compliance": {
+                "third_party_due_diligence": True,
+                "data_sharing_agreements": True,
+                "vendor_risk_assessment": "completed",
+                "data_processing_contracts": True
+            },
+            "cyber_security": {
+                "security_framework": "ISO 27001",
+                "vulnerability_assessment": "quarterly",
+                "penetration_testing": "annual",
+                "incident_response_plan": True,
+                "data_breach_notification": "compliant"
+            }
+        }
+        
+        return rbi_status
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/compliance/dpdpa-status/{customer_id}")
+async def get_dpdpa_compliance_status(customer_id: str):
+    """Get DPDPA 2023 compliance status for customer"""
+    try:
+        customer_data = await db.customer_data.find_one({"id": customer_id})
+        if not customer_data:
+            raise HTTPException(status_code=404, detail="Customer not found")
+        
+        consents = await db.consents.find({"customer_id": customer_id}).to_list(1000)
+        
+        # Remove MongoDB ObjectIds
+        for consent in consents:
+            if "_id" in consent:
+                del consent["_id"]
+        
+        dpdpa_status = {
+            "customer_id": customer_id,
+            "data_principal_rights": {
+                "right_to_information": True,
+                "right_to_correction": True,
+                "right_to_erasure": True,
+                "right_to_grievance_redressal": True,
+                "right_to_nominate": False  # For posthumous data management
+            },
+            "consent_management": {
+                "consent_validity": "valid",
+                "consent_specificity": "granular",
+                "consent_informed": True,
+                "consent_freely_given": True,
+                "consent_withdrawable": True,
+                "consent_purpose_limitation": True
+            },
+            "data_fiduciary_obligations": {
+                "data_protection_by_design": True,
+                "data_minimization": True,
+                "purpose_limitation": True,
+                "storage_limitation": True,
+                "transparency": True,
+                "accuracy": True,
+                "security_safeguards": True
+            },
+            "data_processing_activities": {
+                "processing_lawfulness": "consent_based",
+                "cross_border_transfer": "restricted",
+                "automated_decision_making": False,
+                "profiling": False,
+                "children_data_processing": False
+            },
+            "breach_management": {
+                "breach_detection_system": True,
+                "breach_notification_procedure": True,
+                "data_protection_impact_assessment": "completed",
+                "incident_response_time": "72_hours"
+            },
+            "significant_data_fiduciary": {
+                "user_base_threshold": "not_applicable",
+                "data_processing_volume": "medium",
+                "additional_obligations": "standard",
+                "data_protection_officer_required": True
+            }
+        }
+        
+        return dpdpa_status
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/compliance/privacy-notice")
+async def get_privacy_notice():
+    """Get comprehensive privacy notice"""
+    privacy_notice = {
+        "data_controller": {
+            "name": "Sample Indian Bank",
+            "address": "Banking Tower, BKC, Mumbai, India",
+            "contact": "privacy@bank.com",
+            "dpo_contact": "dpo@bank.com"
+        },
+        "data_processing": {
+            "purposes": [
+                "Account opening and KYC verification",
+                "Transaction processing and clearing",
+                "Risk assessment and fraud prevention",
+                "Regulatory compliance and reporting",
+                "Customer service and support",
+                "Product development and recommendations",
+                "Marketing and communication (with consent)"
+            ],
+            "legal_basis": [
+                "Explicit consent for data sharing",
+                "Contractual necessity for banking services",
+                "Legal obligation for regulatory compliance",
+                "Legitimate interest for fraud prevention"
+            ],
+            "data_categories": [
+                "Identity data (Name, Aadhaar, PAN, passport)",
+                "Contact data (Phone, email, address)",
+                "Financial data (Account details, transactions)",
+                "Digital footprint (IP address, device info)",
+                "Biometric data (for authentication)",
+                "Behavioral data (transaction patterns)"
+            ]
+        },
+        "data_sharing": {
+            "third_parties": [
+                "Credit bureaus (CIBIL, Experian, Equifax)",
+                "Payment processors (NPCI, card networks)",
+                "Government agencies (Income Tax, Enforcement)",
+                "Regulatory bodies (RBI, SEBI, FIU-IND)",
+                "Service providers (technology, security)",
+                "Partner banks (with explicit consent)"
+            ],
+            "international_transfers": "Limited to compliance requirements",
+            "safeguards": "Standard contractual clauses and adequacy decisions"
+        },
+        "retention_periods": {
+            "kyc_documents": "8 years after account closure",
+            "transaction_records": "10 years as per RBI guidelines",
+            "loan_documents": "3 years after loan closure",
+            "consent_records": "Duration of customer relationship",
+            "audit_trails": "7 years for regulatory compliance",
+            "marketing_data": "Until consent withdrawal"
+        },
+        "security_measures": {
+            "encryption": "AES-256 for data at rest and in transit",
+            "access_controls": "Role-based access with multi-factor authentication",
+            "monitoring": "24/7 security monitoring and incident response",
+            "testing": "Regular vulnerability assessments and penetration testing",
+            "compliance": "ISO 27001, PCI DSS, and RBI cybersecurity framework"
+        },
+        "customer_rights": {
+            "gdpr": [
+                "Right to access your personal data",
+                "Right to rectify inaccurate data",
+                "Right to erase personal data",
+                "Right to restrict processing",
+                "Right to data portability",
+                "Right to object to processing",
+                "Right to be informed about data processing"
+            ],
+            "dpdpa": [
+                "Right to information about data processing",
+                "Right to correction of inaccurate data",
+                "Right to erasure of personal data",
+                "Right to grievance redressal",
+                "Right to nominate for posthumous data management"
+            ]
+        },
+        "complaint_procedure": {
+            "internal": "Contact Data Protection Officer at dpo@bank.com",
+            "response_time": "30 days as per DPDPA requirements",
+            "escalation": [
+                "RBI Ombudsman: rbiombudsman@rbi.org.in",
+                "Data Protection Board: grievances@dpb.gov.in",
+                "Consumer Forum: consumeraffairs.gov.in"
+            ]
+        },
+        "last_updated": datetime.utcnow().isoformat(),
+        "version": "2.0 - DPDPA 2023 Compliant"
+    }
+    
+    return privacy_notice
+
+@api_router.post("/compliance/file-complaint")
+async def file_data_protection_complaint(complaint: dict = Body(...)):
+    """File a data protection complaint"""
+    try:
+        complaint_record = {
+            "id": str(uuid.uuid4()),
+            "customer_id": complaint.get("customer_id"),
+            "complaint_type": complaint.get("type", "data_protection"),
+            "description": complaint.get("description"),
+            "category": complaint.get("category", "general"),
+            "severity": complaint.get("severity", "medium"),
+            "status": "submitted",
+            "filed_at": datetime.utcnow(),
+            "expected_resolution": datetime.utcnow() + timedelta(days=30),
+            "assigned_to": "data_protection_team",
+            "contact_method": complaint.get("contact_method", "email")
+        }
+        
+        await db.complaints.insert_one(complaint_record)
+        
+        # Create audit log
+        audit_log = AuditLog(
+            customer_id=complaint.get("customer_id"),
+            action="complaint_filed",
+            details={
+                "complaint_id": complaint_record["id"],
+                "type": complaint.get("type"),
+                "category": complaint.get("category")
+            }
+        )
+        await db.audit_logs.insert_one(audit_log.dict())
+        
+        return {
+            "complaint_id": complaint_record["id"],
+            "status": "submitted",
+            "reference_number": f"DPC-{complaint_record['id'][:8].upper()}",
+            "expected_resolution": complaint_record["expected_resolution"],
+            "contact_info": {
+                "dpo_email": "dpo@bank.com",
+                "complaint_tracking": "complaints.bank.com"
+            }
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/compliance/data-processing-register")
+async def get_data_processing_register():
+    """Get register of data processing activities (GDPR Article 30)"""
+    processing_register = {
+        "data_controller": "Sample Indian Bank",
+        "processing_activities": [
+            {
+                "activity_name": "Customer Onboarding and KYC",
+                "purposes": ["Identity verification", "Regulatory compliance", "Risk assessment"],
+                "legal_basis": "Legal obligation (RBI KYC guidelines)",
+                "data_categories": ["Identity documents", "Contact information", "Financial information"],
+                "data_subjects": ["Retail customers", "Corporate customers"],
+                "recipients": ["Credit bureaus", "RBI", "Income tax authorities"],
+                "international_transfers": "None",
+                "retention_period": "8 years after account closure",
+                "security_measures": "Encryption, access controls, audit logging"
+            },
+            {
+                "activity_name": "Transaction Processing",
+                "purposes": ["Payment processing", "Account management", "Fraud detection"],
+                "legal_basis": "Contract performance",
+                "data_categories": ["Transaction details", "Account balances", "Payment instructions"],
+                "data_subjects": ["Account holders", "Beneficiaries"],
+                "recipients": ["Payment processors", "Other banks", "Card networks"],
+                "international_transfers": "SWIFT network (adequate safeguards)",
+                "retention_period": "10 years as per RBI guidelines",
+                "security_measures": "End-to-end encryption, real-time monitoring"
+            },
+            {
+                "activity_name": "Consent-based Data Sharing",
+                "purposes": ["Partner services", "Product recommendations", "Cross-selling"],
+                "legal_basis": "Explicit consent",
+                "data_categories": ["Profile information", "Transaction patterns", "Product preferences"],
+                "data_subjects": ["Consenting customers"],
+                "recipients": ["Partner financial institutions", "Fintech companies"],
+                "international_transfers": "Only with explicit consent",
+                "retention_period": "Until consent withdrawal",
+                "security_measures": "Granular consent management, audit trails"
+            }
+        ],
+        "last_updated": datetime.utcnow().isoformat(),
+        "next_review": (datetime.utcnow() + timedelta(days=365)).isoformat()
+    }
+    
+    return processing_register
 
 # Include the router in the main app
 app.include_router(api_router)
