@@ -1,0 +1,86 @@
+[
+  {
+    "name": "API Root Endpoint",
+    "status": "PASSED",
+    "response_code": 200,
+    "response": {
+      "message": "Customer Data Portal API",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "name": "Get Partners",
+    "status": "PASSED",
+    "response_code": 200,
+    "response": []
+  },
+  {
+    "name": "Submit Customer Data",
+    "status": "PASSED",
+    "response_code": 200,
+    "response": {
+      "id": "413a5f17-9531-4c27-b10a-bce9437c505f",
+      "full_name": "Test User 20250703063634",
+      "aadhaar_number": "Z0FBQUFBQm9aaVR5bGFzTnE5ZFJ1MUpXVHVFRnBKNThvcGlkem1hUnR0NC1yWXc5RzluUHhwa1FDT2hBMnVZeGpDYm5WeEhsVHNheEhxXzNxZDJFdGVjazMtMklDUnNsZnc9PQ==",
+      "pan_number": "Z0FBQUFBQm9aaVR5Q1VxZXYxc3FHSDRIRl9kVnZHVWl2RG9UVmJkMzJXRk9HcG9fWWlHMlp6V3EzSWxzMUEtU0dGYWpOTzVyUjlSMGRUd2hXbXl3cm1ta2R3LWd5MFNielE9PQ==",
+      "mobile_number": "Z0FBQUFBQm9aaVR5N3ZDUDRvSXVWUDBIWDctZkFjelhmRGdOQ0V3YXhKcVkyZHRFNTdrYmhTMThwbGR5ZG9pM3FObGV2MUt1d3ZqMXJZVGJvdHNDYUZfeC1DN1JfbW0yZkE9PQ==",
+      "email": "test20250703063634@example.com",
+      "address": "Z0FBQUFBQm9aaVR5THdlYnVBRkhIczctdkt4czdrcGx1WVVFcE5QSXhlS2NhVXFmcFVlcXB4QnBYODRCV0IyNmtNTmZJb2NXcGdIM194ZGJsVmhoUjdCWDRYS3RqVnVrS0RiSEFfd1F3VGFkbEFiVlY1WUJ5cWs9",
+      "district": "Test District",
+      "state": "Test State",
+      "pin_code": "110001",
+      "created_at": "2025-07-03T06:36:34.380466",
+      "updated_at": "2025-07-03T06:36:34.380470"
+    }
+  },
+  {
+    "name": "Get User Data",
+    "status": "FAILED",
+    "response_code": 500,
+    "expected": 200,
+    "response": "Internal Server Error"
+  },
+  {
+    "name": "Get Partners",
+    "status": "PASSED",
+    "response_code": 200,
+    "response": []
+  },
+  {
+    "name": "Get Consents",
+    "status": "PASSED",
+    "response_code": 200,
+    "response": []
+  },
+  {
+    "name": "Get Audit Log",
+    "status": "FAILED",
+    "response_code": 500,
+    "expected": 200,
+    "response": "Internal Server Error"
+  },
+  {
+    "name": "Verify Blockchain",
+    "status": "PASSED",
+    "response_code": 200,
+    "response": {
+      "valid": true,
+      "message": "Blockchain is valid"
+    }
+  },
+  {
+    "name": "Export Data",
+    "status": "FAILED",
+    "response_code": 500,
+    "expected": 200,
+    "response": "Internal Server Error"
+  },
+  {
+    "name": "Delete Data",
+    "status": "PASSED",
+    "response_code": 200,
+    "response": {
+      "message": "Customer data deleted successfully"
+    }
+  }
+]
