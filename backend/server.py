@@ -135,11 +135,11 @@ class Partner(BaseModel):
 
 # Initialize sample partners
 SAMPLE_PARTNERS = [
-    {"id": "partner_1", "name": "HDFC Bank", "type": "bank", "description": "Housing loans and credit cards"},
-    {"id": "partner_2", "name": "ICICI Bank", "type": "bank", "description": "Personal loans and investments"},
-    {"id": "partner_3", "name": "Bajaj Finance", "type": "nbfc", "description": "Consumer finance and loans"},
-    {"id": "partner_4", "name": "SBI Cards", "type": "fintech", "description": "Credit card services"},
-    {"id": "partner_5", "name": "Paytm", "type": "fintech", "description": "Digital payments and lending"}
+    {"id": "partner_1", "name": "HDFC Bank", "type": "bank", "description": "Housing loans and credit cards", "is_active": True},
+    {"id": "partner_2", "name": "ICICI Bank", "type": "bank", "description": "Personal loans and investments", "is_active": True},
+    {"id": "partner_3", "name": "Bajaj Finance", "type": "nbfc", "description": "Consumer finance and loans", "is_active": True},
+    {"id": "partner_4", "name": "SBI Cards", "type": "fintech", "description": "Credit card services", "is_active": True},
+    {"id": "partner_5", "name": "Paytm", "type": "fintech", "description": "Digital payments and lending", "is_active": True}
 ]
 
 # Customer Data APIs
