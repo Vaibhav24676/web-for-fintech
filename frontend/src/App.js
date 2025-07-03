@@ -13,6 +13,11 @@ const App = () => {
   const [auditLogs, setAuditLogs] = useState([]);
   const [currentCustomerId, setCurrentCustomerId] = useState(null);
   const [notification, setNotification] = useState({ message: '', type: '' });
+  const [complianceData, setComplianceData] = useState({
+    gdpr: null,
+    rbi: null,
+    dpdpa: null
+  });
 
   // Customer Data Collection Form
   const [formData, setFormData] = useState({
