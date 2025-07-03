@@ -956,6 +956,11 @@ async def get_data_processing_register():
     
     return processing_register
 
+# Test endpoint
+@api_router.get("/")
+async def root():
+    return {"message": "Customer Data Portal API", "version": "1.0.0"}
+
 # Include the router in the main app
 app.include_router(api_router)
 
