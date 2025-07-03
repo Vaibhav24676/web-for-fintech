@@ -507,11 +507,25 @@ async def export_customer_data(customer_id: str):
         if not customer_data:
             raise HTTPException(status_code=404, detail="Customer not found")
         
+        # Remove MongoDB ObjectId
+        if "_id" in customer_data:
+            del customer_data["_id"]
+        
         # Get consents
         consents = await db.consents.find({"customer_id": customer_id}).to_list(1000)
         
+        # Remove MongoDB ObjectIds from consents
+        for consent in consents:
+            if "_id" in consent:
+                del consent["_id"]
+        
         # Get audit logs
         audit_logs = await db.audit_logs.find({"customer_id": customer_id}).to_list(1000)
+        
+        # Remove MongoDB ObjectIds from audit logs
+        for log in audit_logs:
+            if "_id" in log:
+                del log["_id"]
         
         # Decrypt sensitive data
         customer_data["aadhaar_number"] = decrypt_data(customer_data["aadhaar_number"], customer_id)
