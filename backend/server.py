@@ -447,10 +447,12 @@ async def get_partners():
                 print(f"DEBUG: Inserting partner: {partner}")
                 await db.partners.insert_one(partner)
             print("DEBUG: Sample partners initialized")
-        
-        # First get all partners to debug
-        all_partners = await db.partners.find({}).to_list(1000)
-        print(f"DEBUG: All partners in DB: {all_partners}")
+        else:
+            # Check if existing partners have is_active field
+            active_count = await db.partners.count_documents({"is_active": {"$exists": True}})
+            if active_count == 0:
+                print("DEBUG: Updating existing partners to add is_active field...")
+                await db.partners.update_many({}, {"$set": {"is_active": True}})
         
         partners = await db.partners.find({"is_active": True}).to_list(1000)
         print(f"DEBUG: Retrieved {len(partners)} active partners")
