@@ -439,6 +439,12 @@ async def get_partners():
                 await db.partners.insert_one(partner)
         
         partners = await db.partners.find({"is_active": True}).to_list(1000)
+        
+        # Remove MongoDB ObjectIds
+        for partner in partners:
+            if "_id" in partner:
+                del partner["_id"]
+        
         return partners
         
     except Exception as e:
