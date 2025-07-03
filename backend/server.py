@@ -448,6 +448,10 @@ async def get_partners():
                 await db.partners.insert_one(partner)
             print("DEBUG: Sample partners initialized")
         
+        # First get all partners to debug
+        all_partners = await db.partners.find({}).to_list(1000)
+        print(f"DEBUG: All partners in DB: {all_partners}")
+        
         partners = await db.partners.find({"is_active": True}).to_list(1000)
         print(f"DEBUG: Retrieved {len(partners)} active partners")
         
