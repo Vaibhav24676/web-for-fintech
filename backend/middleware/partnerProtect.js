@@ -1,4 +1,4 @@
-partnerProtect.js// middleware/partnerProtect.js
+// middleware/partnerProtect.js
 import Partner from '../models/partnerModel.js';
 import crypto from 'crypto';
 
@@ -30,5 +30,6 @@ export const partnerProtect = async (req, res, next) => {
   }
 
   req.user = { role: 'partner', partnerId: partner.partnerId, _id: partner._id };
+  req.partner = partner;
   next();
 };

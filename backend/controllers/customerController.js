@@ -3,6 +3,70 @@ import encryptionService from '../utils/encryptionService.js';
 import auditService from '../utils/auditService.js';
 import User from '../models/userModel.js';
 
+// Helper function to decrypt customer data
+const decryptCustomerData = async (customer) => {
+  if (!customer) return null;
+  
+  const decryptedCustomer = {
+    _id: customer._id,
+    createdAt: customer.createdAt,
+    updatedAt: customer.updatedAt,
+    isActive: customer.isActive
+  };
+
+  // Decrypt phone if it exists
+  if (customer.encryptedPhone) {
+    try {
+      const encryptedPhoneData = JSON.parse(customer.encryptedPhone);
+      decryptedCustomer.phone = await encryptionService.decryptField(encryptedPhoneData);
+    } catch (error) {
+      console.error('Error decrypting phone:', error);
+    }
+  }
+
+  // Decrypt email if it exists
+  if (customer.encryptedEmail) {
+    try {
+      const encryptedEmailData = JSON.parse(customer.encryptedEmail);
+      decryptedCustomer.email = await encryptionService.decryptField(encryptedEmailData);
+    } catch (error) {
+      console.error('Error decrypting email:', error);
+    }
+  }
+
+  // Decrypt PAN if it exists
+  if (customer.encryptedPan) {
+    try {
+      const encryptedPanData = JSON.parse(customer.encryptedPan);
+      decryptedCustomer.pan = await encryptionService.decryptField(encryptedPanData);
+    } catch (error) {
+      console.error('Error decrypting PAN:', error);
+    }
+  }
+
+  // Decrypt address if it exists
+  if (customer.encryptedAddress) {
+    try {
+      const encryptedAddressData = JSON.parse(customer.encryptedAddress);
+      decryptedCustomer.address = await encryptionService.decryptField(encryptedAddressData);
+    } catch (error) {
+      console.error('Error decrypting address:', error);
+    }
+  }
+
+  // Decrypt name if it exists
+  if (customer.encryptedName) {
+    try {
+      const encryptedNameData = JSON.parse(customer.encryptedName);
+      decryptedCustomer.name = await encryptionService.decryptField(encryptedNameData);
+    } catch (error) {
+      console.error('Error decrypting name:', error);
+    }
+  }
+
+  return decryptedCustomer;
+};
+
 // @desc    Get all customers
 // @route   GET /api/v1/customers
 // @access  Admin
@@ -14,7 +78,7 @@ export const getAllCustomers = async (req, res, next) => {
       status: 'success',
       results: customers.length,
       data: {
-        customers
+        customers: await Promise.all(customers.map(decryptCustomerData))
       }
     });
   } catch (error) {
@@ -39,7 +103,7 @@ export const getCustomer = async (req, res, next) => {
     res.status(200).json({
       status: 'success',
       data: {
-        customer
+        customer: await decryptCustomerData(customer)
       }
     });
   } catch (error) {
@@ -85,7 +149,7 @@ export const createCustomer = async (req, res, next) => {
     res.status(201).json({
       status: 'success',
       data: {
-        customer: newCustomer
+        customer: await decryptCustomerData(newCustomer)
       }
     });
   } catch (error) {
@@ -169,7 +233,7 @@ export const updateCustomer = async (req, res, next) => {
     res.status(200).json({
       status: 'success',
       data: {
-        customer
+        customer: await decryptCustomerData(customer)
       }
     });
   } catch (error) {
@@ -311,7 +375,7 @@ export const createMyProfile = async (req, res, next) => {
     res.status(200).json({
       status: 'success',
       data: {
-        customer
+        customer: await decryptCustomerData(customer)
       }
     });
   } catch (error) {
@@ -346,7 +410,7 @@ export const getMyProfile = async (req, res, next) => {
     res.status(200).json({
       status: 'success',
       data: {
-        customer
+        customer: await decryptCustomerData(customer)
       }
     });
   } catch (error) {

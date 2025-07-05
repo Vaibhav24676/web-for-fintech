@@ -45,6 +45,16 @@ const consentSchema = new mongoose.Schema({
     type: Date,
     required: [true, 'Expiry date is required']
   },
+  consentDuration: {
+    type: Number, // in milliseconds
+    required: [true, 'Consent duration is required'],
+    validate: {
+      validator: function(value) {
+        return value >= parseInt(process.env.MIN_CONSENT_DURATION_MS);
+      },
+      message: props => `Consent duration must be at least ${parseInt(process.env.MIN_CONSENT_DURATION_MS) / (60 * 60 * 1000)} hour(s)`
+    }
+  },
   status: { 
     type: String, 
     default: 'active',
@@ -54,7 +64,15 @@ const consentSchema = new mongoose.Schema({
   ipAddressHash: String,
   deviceFingerprint: String,
   legalBasis: String,
-  withdrawalMethod: String
+  withdrawalMethod: String,
+  contractText: {
+    type: String,
+    required: [true, 'Contract text is required']
+  },
+  contractId: {
+    type: String,
+    required: [true, 'Contract ID is required']
+  }
 });
 
 // Update the updatedAt timestamp before saving

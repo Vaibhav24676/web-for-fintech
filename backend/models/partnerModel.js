@@ -22,6 +22,37 @@ const partnerSchema = new mongoose.Schema({
     default: 'active',
     enum: ['active', 'pending', 'suspended', 'inactive']
   },
+  // New fields for contract management
+  requestedContract: {
+    allowedDataFields: [String],
+    purpose: String,
+    retentionPeriod: Number, // in days
+    legalBasis: String,
+    contractText: String,
+    requestedAt: { 
+      type: Date, 
+      default: Date.now 
+    }
+  },
+  // Store the full approved contract data
+  approvedContract: {
+    type: Boolean,
+    default: false
+  },
+  contractData: {
+    allowedDataFields: [String],
+    purpose: String,
+    retentionPeriod: Number, // in days
+    legalBasis: String,
+    contractText: String,
+    contractId: String, // Unique identifier for the contract
+    version: { type: Number, default: 1 }
+  },
+  contractApprovedAt: Date,
+  contractApprovedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   createdAt: { 
     type: Date, 
     default: Date.now 

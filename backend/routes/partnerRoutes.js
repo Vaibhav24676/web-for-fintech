@@ -9,28 +9,36 @@ import {
   getAllPartners,
   updatePartnerKey,
   partnerDataRequest,
-  getPartnerConsents
+  getPartnerConsents,
+  approvePartnerContract,
+  getPendingContractPartners,
+  getApprovedPartners,
+  getPartnerContract
 } from '../controllers/partnerController.js';
 
 const router = express.Router();
+
+// Customer-accessible route to get approved partners for selection
+router.get('/approved', protect, getApprovedPartners);
+
+// Get partner contract details for consent creation
+router.get('/:partnerId/contract', protect, getPartnerContract);
+
+
+// New admin routes for contract management
+router.get('/pending-contracts', protect, restrictTo('admin'), getPendingContractPartners);
+router.post('/:partnerId/contract/approve', protect, restrictTo('admin'), approvePartnerContract);
 
 /**
  * Admin-only endpoints (protected with JWT-based protect middleware)
  * These require login with username/password and receive JWT.
  */
-router.use(['/','/register', '/:partnerId', '/:partnerId/keys'], protect);
-
-// Admin routes
-router.route('/')
-  .get(restrictTo('admin'), getAllPartners);
-
-router.post('/register', registerPartner);
-
-router.route('/:partnerId')
-  .get(getPartner)
-  .put(updatePartner);
-
-router.post('/:partnerId/keys', updatePartnerKey);
+// Only apply protect middleware to admin routes, not all routes
+router.get('/', protect, restrictTo('admin'), getAllPartners);
+router.post('/register', protect, registerPartner);
+router.get('/:partnerId', protect, getPartner);
+router.put('/:partnerId', protect, updatePartner);
+router.post('/:partnerId/keys', protect, updatePartnerKey);
 
 /**
  * Partner endpoints (protected with your custom partnerProtect middleware)

@@ -70,15 +70,26 @@ export const createConsent = async (req, res, next) => {
     const {
       customerId,
       partnerId,
-      allowedDataFields,
-      purpose,
-      retentionPeriod,
-      consentMethod,
-      deviceFingerprint,
-      ipAddressHash,
-      legalBasis,
-      withdrawalMethod
+      consentDuration
     } = req.body;
+
+    // Validate consent duration
+    if (!consentDuration) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Consent duration is required'
+      });
+    }
+
+    // Check if duration meets minimum requirement
+    const minDuration = parseInt(process.env.MIN_CONSENT_DURATION_MS);
+    if (consentDuration < minDuration) {
+      const minHours = minDuration / (60 * 60 * 1000);
+      return res.status(400).json({
+        status: 'error',
+        message: `Consent duration must be at least ${minHours} hour(s)`
+      });
+    }
 
     // Check if customer exists
     const customer = await Customer.findById(customerId);
@@ -98,11 +109,37 @@ export const createConsent = async (req, res, next) => {
       });
     }
 
-    // Calculate expiry date (current date + retention period in days)
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + retentionPeriod);
+    // Check if partner has an approved contract
+    if (!partner.approvedContract || !partner.contractData) {
+      return res.status(403).json({
+        status: 'error',
+        message: 'This partner does not have an approved contract yet'
+      });
+    }
+
+    // Use the approved contract details from the partner
+    const { 
+      allowedDataFields,
+      purpose,
+      retentionPeriod,
+      legalBasis,
+      contractText,
+      contractId
+    } = partner.contractData;
+
+    // Extract device info from request
+    const {
+      consentMethod = 'app',
+      deviceFingerprint,
+      ipAddressHash,
+      withdrawalMethod = 'app'
+    } = req.body;
+
+    // Calculate expiry date using the consentDuration (in milliseconds)
+    const expiresAt = new Date(Date.now() + consentDuration);
 
     const newConsent = await Consent.create({
+      consentDuration,
       customerId,
       partnerId,
       allowedDataFields,
@@ -113,7 +150,9 @@ export const createConsent = async (req, res, next) => {
       deviceFingerprint,
       ipAddressHash: ipAddressHash || req.ip,
       legalBasis,
-      withdrawalMethod
+      withdrawalMethod,
+      contractText,
+      contractId // Store the contract ID with the consent
     });
 
     // Log consent creation
@@ -129,6 +168,8 @@ export const createConsent = async (req, res, next) => {
         allowedDataFields,
         purpose,
         retentionPeriod,
+        contractId, // Add contract ID to audit log
+        consentDuration,
         expiresAt
       },
       metadata: { ip: req.ip }
@@ -147,6 +188,7 @@ export const createConsent = async (req, res, next) => {
           allowedDataFields,
           purpose,
           status: newConsent.status,
+          consentDuration: newConsent.consentDuration,
           expiresAt: newConsent.expiresAt
         },
         user: req.user
@@ -175,6 +217,7 @@ export const updateConsent = async (req, res, next) => {
       allowedDataFields,
       purpose,
       retentionPeriod,
+      consentDuration,
       status
     } = req.body;
 
@@ -184,6 +227,23 @@ export const updateConsent = async (req, res, next) => {
     if (allowedDataFields) updateData.allowedDataFields = allowedDataFields;
     if (purpose) updateData.purpose = purpose;
     if (status) updateData.status = status;
+    
+    // Handle consentDuration update if provided
+    if (consentDuration) {
+      // Check if duration meets minimum requirement
+      const minDuration = parseInt(process.env.MIN_CONSENT_DURATION_MS);
+      if (consentDuration < minDuration) {
+        const minHours = minDuration / (60 * 60 * 1000);
+        return res.status(400).json({
+          status: 'error',
+          message: `Consent duration must be at least ${minHours} hour(s)`
+        });
+      }
+      
+      updateData.consentDuration = consentDuration;
+      // Calculate new expiry date
+      updateData.expiresAt = new Date(Date.now() + consentDuration);
+    }
     
     if (retentionPeriod) {
       updateData.retentionPeriod = retentionPeriod;

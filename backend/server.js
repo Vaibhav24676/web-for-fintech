@@ -18,6 +18,16 @@ dotenv.config();
 // Initialize express app
 const app = express();
 
+// Set API base URL for notifications if not provided in environment
+if (!process.env.API_BASE_URL) {
+  process.env.API_BASE_URL = 'https://localhost:5000/v1';
+}
+
+// Set minimum consent duration if not provided (default: 1 hour in milliseconds)
+if (!process.env.MIN_CONSENT_DURATION_MS) {
+  process.env.MIN_CONSENT_DURATION_MS = 60 * 60 * 1000; // 1 hour
+}
+
 // Middleware
 app.use(helmet()); // Set security headers
 app.use(express.json()); // Parse JSON bodies
@@ -49,7 +59,7 @@ app.get('/', (req, res) => {
 app.use(errorHandler);
 
 // Connect to MongoDB and start server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000; // Using port 5000 as specified
 
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -57,6 +67,7 @@ mongoose
     console.log('Connected to MongoDB');
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
+      console.log(`API Base URL for partners: ${process.env.API_BASE_URL}`);
     });
   })
   .catch((error) => {
