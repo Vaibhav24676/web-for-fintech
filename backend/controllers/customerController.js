@@ -77,9 +77,7 @@ export const getAllCustomers = async (req, res, next) => {
     res.status(200).json({
       status: 'success',
       results: customers.length,
-      data: {
-        customers: await Promise.all(customers.map(decryptCustomerData))
-      }
+      customers: await Promise.all(customers.map(decryptCustomerData))
     });
   } catch (error) {
     next(error);
@@ -119,11 +117,11 @@ export const createCustomer = async (req, res, next) => {
     const { phone, email, pan, address, name } = req.body;
 
     // Encrypt sensitive data
-    const encryptedPhone = phone ? await encryptionService.encryptField(phone) : null;
-    const encryptedEmail = email ? await encryptionService.encryptField(email) : null;
-    const encryptedPan = pan ? await encryptionService.encryptField(pan) : null;
-    const encryptedAddress = address ? await encryptionService.encryptField(address) : null;
-    const encryptedName = name ? await encryptionService.encryptField(name) : null;
+    const encryptedPhone = phone ? await encryptionService.encryptField(JSON.stringify(phone)) : null;
+    const encryptedEmail = email ? await encryptionService.encryptField(JSON.stringify(email)) : null;
+    const encryptedPan = pan ? await encryptionService.encryptField(JSON.stringify(pan)) : null;
+    const encryptedAddress = address ? await encryptionService.encryptField(JSON.stringify(address)) : null;
+    const encryptedName = name ? await encryptionService.encryptField(JSON.stringify(name)) : null;
 
     const newCustomer = await Customer.create({
       encryptedPhone: encryptedPhone ? JSON.stringify(encryptedPhone) : null,
@@ -148,8 +146,9 @@ export const createCustomer = async (req, res, next) => {
 
     res.status(201).json({
       status: 'success',
-      data: {
-        customer: await decryptCustomerData(newCustomer)
+      customer: {
+        _id: newCustomer._id,
+        ...await decryptCustomerData(newCustomer)
       }
     });
   } catch (error) {

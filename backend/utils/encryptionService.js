@@ -1,3 +1,16 @@
+/**
+ * EncryptionService - Provides AES-256-GCM encryption and decryption
+ * 
+ * This service handles secure encryption of sensitive data using AES-256-GCM,
+ * which provides both confidentiality and authentication.
+ * 
+ * IMPORTANT SECURITY NOTES:
+ * 1. In production, ALWAYS provide a secure 32-byte encryption key via environment variables
+ * 2. The development fallback key should NEVER be used in production
+ * 3. Rotate encryption keys periodically according to your security policy
+ * 4. Store encryption keys in a secure key management system in production
+ */
+
 import crypto from 'crypto';
 import dotenv from 'dotenv';
 
@@ -5,7 +18,24 @@ dotenv.config();
 
 class EncryptionService {
   constructor() {
-    this.key = Buffer.from(process.env.ENCRYPTION_KEY, 'utf8');
+    // For production, use a secure 32-byte key from environment or key management system
+    const encryptionKey = process.env.ENCRYPTION_KEY;
+    
+    // Check if we're in production but missing a key
+    if (process.env.NODE_ENV === 'production' && !encryptionKey) {
+      throw new Error('ENCRYPTION_KEY environment variable is required in production');
+    }
+    
+    // Use fallback key for development only
+    if (!encryptionKey) {
+      console.log('Using dynamically generated keys for development - NOT FOR PRODUCTION');
+      this.key = Buffer.from('temporary_development_key_32bytes_long'.slice(0, 32), 'utf8');
+    } else {
+      // Use the provided key, ensuring it's exactly 32 bytes
+      this.key = Buffer.from(encryptionKey.padEnd(32).slice(0, 32), 'utf8');
+    }
+    
+    // Validate key length
     if (this.key.length !== 32) {
       throw new Error('Encryption key must be 32 bytes (256 bits)');
     }

@@ -83,9 +83,15 @@ export const registerPartner = async (req, res, next) => {
       });
     }
 
+    // Send response
     res.status(201).json({
       status: 'success',
-      data: { partner: { ...partner.toObject(), apiToken } },
+      partnerId: partner.partnerId,
+      partner: { 
+        ...partner.toObject(), 
+        apiToken,
+        partnerId: partner.partnerId
+      },
       message: `Partner registered successfully with ID: ${partnerId}. Contract pending approval.`
     });
   } catch (error) {
@@ -513,35 +519,37 @@ export const partnerDataRequest = async (req, res, next) => {
       responseData.phone = '+1234567890';
     }
 
-    // Log the EXACT data that will be encrypted and sent
-    console.log('====== ACTUAL DATA BEING SENT (PRE-ENCRYPTION) ======');
-    console.log(JSON.stringify(responseData, null, 2));
-    console.log('====================================================');
+    // For production, remove the following debug logs
 
-    // Create and log a fully decrypted version of the response for debugging
-    console.log('\n\n');
-    console.log('*******************************************************');
-    console.log('*                                                     *');
-    console.log('*             FULLY DECRYPTED RESPONSE                *');
-    console.log('*                                                     *');
-    console.log('*******************************************************');
-    
-    const decryptedResponseForLogging = {};
-    for (const [key, value] of Object.entries(responseData)) {
-      if (typeof value === 'string' && value.includes('"encryptedValue"') && value.includes('"iv"') && value.includes('"authTag"')) {
-        try {
-          const encryptedData = JSON.parse(value);
-          decryptedResponseForLogging[key] = await encryptionService.decryptField(encryptedData);
-        } catch (error) {
-          decryptedResponseForLogging[key] = `[Error decrypting: ${error.message}]`;
-        }
-      } else {
-        decryptedResponseForLogging[key] = value;
-      }
+    // Log the data that will be sent (for development purposes only)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('====== DEVELOPMENT: DATA BEING SENT (PRE-ENCRYPTION) ======');
+      console.log(JSON.stringify(responseData, null, 2));
+      console.log('====================================================');
     }
-    
-    console.log(JSON.stringify(decryptedResponseForLogging, null, 2));
-    console.log('\n*******************************************************\n\n');
+
+    // Decrypt and log the response data in development mode only
+    if (process.env.NODE_ENV === 'development') {
+      const decryptedResponseForLogging = {};
+      for (const [key, value] of Object.entries(responseData)) {
+        if (typeof value === 'string' && value.includes('"encryptedValue"') && value.includes('"iv"') && value.includes('"authTag"')) {
+          try {
+            const encryptedData = JSON.parse(value);
+            decryptedResponseForLogging[key] = await encryptionService.decryptField(encryptedData);
+          } catch (error) {
+            decryptedResponseForLogging[key] = `[Error decrypting: ${error.message}]`;
+          }
+        } else {
+          decryptedResponseForLogging[key] = value;
+        }
+      }
+      
+      console.log('*******************************************************');
+      console.log('*             DEVELOPMENT: DECRYPTED RESPONSE          *');
+      console.log('*******************************************************');
+      console.log(JSON.stringify(decryptedResponseForLogging, null, 2));
+      console.log('*******************************************************');
+    }
 
     // If partner has a public key, encrypt the response using RSA-OAEP with SHA-256
     let encryptedResponse = null;

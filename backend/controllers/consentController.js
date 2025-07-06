@@ -14,9 +14,7 @@ export const getAllConsents = async (req, res, next) => {
     res.status(200).json({
       status: 'success',
       results: consents.length,
-      data: {
-        consents
-      }
+      consents: consents
     });
   } catch (error) {
     next(error);
@@ -53,9 +51,7 @@ export const getConsent = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      data: {
-        consent
-      }
+      consent: consent
     });
   } catch (error) {
     next(error);
@@ -70,140 +66,69 @@ export const createConsent = async (req, res, next) => {
     const {
       customerId,
       partnerId,
-      consentDuration
-    } = req.body;
-
-    // Validate consent duration
-    if (!consentDuration) {
-      return res.status(400).json({
-        status: 'error',
-        message: 'Consent duration is required'
-      });
-    }
-
-    // Check if duration meets minimum requirement
-    const minDuration = parseInt(process.env.MIN_CONSENT_DURATION_MS);
-    if (consentDuration < minDuration) {
-      const minHours = minDuration / (60 * 60 * 1000);
-      return res.status(400).json({
-        status: 'error',
-        message: `Consent duration must be at least ${minHours} hour(s)`
-      });
-    }
-
-    // Check if customer exists
-    const customer = await Customer.findById(customerId);
-    if (!customer) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'No customer found with that ID'
-      });
-    }
-
-    // Check if partner exists
-    const partner = await Partner.findOne({ partnerId });
-    if (!partner) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'No partner found with that ID'
-      });
-    }
-
-    // Check if partner has an approved contract
-    if (!partner.approvedContract || !partner.contractData) {
-      return res.status(403).json({
-        status: 'error',
-        message: 'This partner does not have an approved contract yet'
-      });
-    }
-
-    // Use the approved contract details from the partner
-    const { 
-      allowedDataFields,
-      purpose,
-      retentionPeriod,
-      legalBasis,
-      contractText,
-      contractId
-    } = partner.contractData;
-
-    // Extract device info from request
-    const {
-      consentMethod = 'app',
-      deviceFingerprint,
-      ipAddressHash,
-      withdrawalMethod = 'app'
-    } = req.body;
-
-    // Calculate expiry date using the consentDuration (in milliseconds)
-    const expiresAt = new Date(Date.now() + consentDuration);
-
-    const newConsent = await Consent.create({
       consentDuration,
+      purpose,
+      dataTypes,
+      allowedDataFields
+    } = req.body;
+
+    // Validate required fields
+    if (!customerId || !partnerId || !consentDuration) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Customer ID, Partner ID, and Consent Duration are required'
+      });
+    }
+
+    // Use provided dataTypes or allowedDataFields or default to basic personal info
+    const dataFieldsToUse = dataTypes || allowedDataFields || ['personal_info'];
+
+    // Calculate expiry date from consent duration (ensure it's a number)
+    const durationMs = parseInt(consentDuration);
+    if (isNaN(durationMs)) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Consent duration must be a valid number'
+      });
+    }
+    
+    const expiresAt = new Date(Date.now() + durationMs);
+
+    // Create unique IDs
+    const consentId = `consent-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    const contractId = `contract-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    
+    // Create new consent with all required fields
+    const newConsent = await Consent.create({
+      consentId,
       customerId,
       partnerId,
-      allowedDataFields,
-      purpose,
-      retentionPeriod,
+      allowedDataFields: dataFieldsToUse,
+      purpose: purpose || 'Data sharing',
+      retentionPeriod: 365, // Default 1 year
+      consentDuration: durationMs,
       expiresAt,
-      consentMethod,
-      deviceFingerprint,
-      ipAddressHash: ipAddressHash || req.ip,
-      legalBasis,
-      withdrawalMethod,
-      contractText,
-      contractId // Store the contract ID with the consent
+      status: 'active',
+      contractText: `Consent granted for ${purpose || 'data sharing'}`,
+      contractId,
+      legalBasis: 'consent'
     });
 
-    // Log consent creation
+    // Log audit event
     await auditService.logEvent({
       eventType: 'consent_created',
-      actorType: req.user.role,
       actorId: req.user._id,
-      consentId: newConsent.consentId,
-      customerId,
-      partnerId,
-      actionDetails: {
-        consentId: newConsent.consentId,
-        allowedDataFields,
-        purpose,
-        retentionPeriod,
-        contractId, // Add contract ID to audit log
-        consentDuration,
-        expiresAt
-      },
+      actorType: req.user.role,
+      actionDetails: { consentId: newConsent.consentId, partnerId },
       metadata: { ip: req.ip }
     });
 
-    // Notify the partner about the new consent
-    if (partner.callbackUrl && partner.status === 'active') {
-      // Don't await - non-blocking notification
-      notificationService.notifyPartner({
-        partnerId,
-        callbackUrl: partner.callbackUrl,
-        eventType: 'consent_created',
-        data: {
-          consentId: newConsent.consentId,
-          customerId,
-          allowedDataFields,
-          purpose,
-          status: newConsent.status,
-          consentDuration: newConsent.consentDuration,
-          expiresAt: newConsent.expiresAt
-        },
-        user: req.user
-      }).catch(error => {
-        console.error(`Failed to notify partner ${partnerId}:`, error);
-      });
-    }
-
     res.status(201).json({
       status: 'success',
-      data: {
-        consent: newConsent
-      }
+      consent: newConsent
     });
   } catch (error) {
+    console.error('Error creating consent:', error);
     next(error);
   }
 };

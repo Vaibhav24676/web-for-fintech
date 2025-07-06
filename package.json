@@ -1,0 +1,17 @@
+{
+  "name": "fintech-backend-tests",
+  "version": "1.0.0",
+  "description": "Test scripts for fintech backend",
+  "type": "module",
+  "scripts": {
+    "test": "node test-api.js",
+    "test-modules": "node test-modules.js",
+    "dev": "node dev-start.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "dotenv": "^16.3.1",
+    "mongoose": "^8.0.3",
+    "bcryptjs": "^2.4.3"
+  }
+}
