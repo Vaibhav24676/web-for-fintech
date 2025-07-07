@@ -35,7 +35,7 @@ The fintech backend project has been successfully tested, debugged, and verified
 - **Database operations** (read/write/sync) all working
 
 ### Version Control & Documentation ✅
-- **Complete project pushed to GitHub**: https://github.com/hetvirani18/fintech-backend.git
+- **Complete project pushed to GitHub**: https://github.com/Vaibhav24676/web-for-fintech/tree/fintech-backend
 - **Comprehensive README.md** with setup instructions
 - **API testing documentation** in `api-test-commands.md`
 - **PowerShell and Bash scripts** for automated API testing

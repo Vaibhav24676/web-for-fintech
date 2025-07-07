@@ -198,3 +198,5 @@ The Partner Integration is fully verified and operational. The system is ready f
 **STATUS: VERIFICATION COMPLETE ✅**
 
 All components described in `PARTNER_INTEGRATION.md` have been tested and confirmed operational.
+
+**Repository:** https://github.com/Vaibhav24676/web-for-fintech/tree/fintech-backend
