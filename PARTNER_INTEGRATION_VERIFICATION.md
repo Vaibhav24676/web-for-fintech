@@ -30,6 +30,7 @@ I have successfully verified all components documented in `PARTNER_INTEGRATION.m
 - ✅ Sync status tracking: **OPERATIONAL**  
 - ✅ Configurable sync interval: **3600s (1 hour)**
 - ✅ Force sync capability: **AVAILABLE**
+- ℹ️ **Runtime Status**: Disabled by configuration (controlled via environment variables)
 
 ### 2. Resilient Validation (`models/consentModel.js`)
 - ✅ Graceful partner validation: **IMPLEMENTED**
@@ -73,8 +74,20 @@ I have successfully verified all components documented in `PARTNER_INTEGRATION.m
 
 ---
 
-## 📊 Health Endpoint Response
+## 📊 Server Runtime Output & Health Status
 
+**Server Startup Log (July 7, 2025):**
+```
+Using dynamically generated keys for development - NOT FOR PRODUCTION
+Connected to MongoDB: mongodb://localhost:27017/fintech_bank
+Partner Portal not available (expected in standalone mode)
+Server running on port 5000
+API Base URL: http://localhost:5000/api/v1
+Partner Sync Service disabled by configuration
+Health endpoint responding: GET /health 200
+```
+
+**Health Endpoint Response:**
 ```json
 {
     "status": "healthy",
@@ -94,6 +107,32 @@ I have successfully verified all components documented in `PARTNER_INTEGRATION.m
     }
 }
 ```
+
+**Key Observations:**
+- ✅ Main database connection established successfully
+- ⚠️ Partner Portal gracefully handles unavailability (as designed)
+- ✅ Server starts on correct port (5000)
+- ✅ Health endpoint operational and responding
+- ✅ Development security warning present (appropriate for dev environment)
+
+**Runtime Warnings Observed:**
+1. ⚠️ MongoDB driver deprecation warnings (useNewUrlParser, useUnifiedTopology)
+   - Status: Non-critical, deprecated options have no effect
+   - Action: Can be removed from connection options for cleaner logs
+
+2. ⚠️ Mongoose duplicate schema index warning  
+   - Status: Non-critical, duplicate index definition detected
+   - Action: Review schema definitions to remove duplicate index declarations
+
+3. ⚠️ Partner Portal not available
+   - Status: Expected behavior when Partner Portal is not running
+   - Action: This demonstrates resilient operation as designed
+
+**System Behavior Verification:**
+- ✅ Server continues normal operation despite Partner Portal unavailability
+- ✅ Health endpoint correctly reports component status
+- ✅ Main API functions independently
+- ✅ Graceful degradation working as intended
 
 ---
 
