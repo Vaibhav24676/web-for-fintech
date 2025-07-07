@@ -5,6 +5,7 @@
  * It ensures that the main API can continue to function even when the Partner Portal is unavailable.
  */
 
+import mongoose from 'mongoose';
 import Partner from '../models/partnerModel.js';
 import { getPartnerDb, getSharedDb } from '../../partner-portal/config/partnerDb.js';
 import { logInfo, logError, logWarn } from '../utils/loggerService.js';
